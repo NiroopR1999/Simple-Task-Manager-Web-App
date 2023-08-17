@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Document</title>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        /* font-family: Arial, sans-serif; */
+        font-family: "Comic Sans MS", cursive;
+      }
+
+      .header {
+        background-color: #212529;
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+      }
+
+      .logo h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #fff;
+      }
+
+      .heading h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #fff;
+      }
+
+      .main {
+        background-color: #f8f9fa;
+        display: flex;
+        padding: 20px;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-control {
+        flex: 1;
+        margin-right: 10px;
+        border-radius: 5px;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      .btn-primary {
+        min-width: 100px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #00ffd5;
+        border: none;
+        transition: background-color 0.3s ease;
+        background-image: linear-gradient(to right, #007bff, #007bff);
+        /* Set initial gradient color */
+        padding: 12px 20px;
+        width: 120px; /* Increase the width */
+      }
+
+      .btn-primary:hover {
+        background-color: #0069d9;
+        transform: scale(1.1);
+      }
+
+      .btn-primary:focus {
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+        outline: none;
+      }
+
+      .container {
+        margin-top: 20px;
+      }
+
+      .card {
+        background-color: #fff;
+        color: #212529;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-text {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      .card-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+      }
+      .btn-danger,
+      .btn-warning {
+        margin-left: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: none;
+        padding: 8px 12px;
+        color: #fff;
+        font-weight: bold;
+      }
+
+      .btn-danger {
+        background-color: #dc3545;
+      }
+
+      .btn-warning {
+        background-color: #ffc107;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <div class="logo">
+        <h1><i class="fas fa-tasks"></i></h1>
+      </div>
+      <div class="heading">
+        <h1 class="text-white">Task Manager</h1>
+      </div>
+    </div>
+    <div class="main">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Enter your task here..."
+        id="input"
+      />
+      <input
+        type="button"
+        value="Add Task"
+        class="btn btn-primary btn-lg text-light"
+        id="btn"
+      />
+    </div>
+    <div class="container">
+      <div class="row" id="display"></div>
+    </div>
+
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let input = document.getElementById("input");
+      let btn = document.getElementById("btn");
+      let todoArr = [];
+
+      btn.addEventListener("click", (e) => {
+        if (!input.value) {
+          alert("Input cannot be empty");
+        } else {
+          let obj = {
+            id: Date.now(),
+            task: input.value,
+          };
+          todoArr.push(obj);
+          console.log(todoArr);
+          print();
+          input.value = "";
+        }
+      });
+
+      // Printing function
+      function print() {
+        let display = document.getElementById("display");
+        display.innerHTML = "";
+
+        todoArr.forEach((e) => {
+          let card = document.createElement("div");
+          card.className = "card col-3";
+          card.innerHTML = `
+                    <div class="card-body d-flex">
+                        <p class="card-text">${e.task}</p>
+                        <div>
+                            <button type="button" class="btn btn-danger" onclick="del(${e.id})"><i class="fas fa-trash"></i></button>
+                            <button type="button" class="btn btn-warning" onclick="edit(${e.id})"><i class="fas fa-pen"></i></button>
+                        </div>
+                    </div>
+                `;
+          display.appendChild(card);
+        });
+      }
+
+      // Delete function
+      function del(id) {
+        todoArr = todoArr.filter((e) => e.id !== id);
+        print();
+      }
+
+      // Edit function
+      function edit(id) {
+        let taskObj = todoArr.find((e) => e.id === id);
+        if (taskObj) {
+          input.value = taskObj.task;
+          todoArr = todoArr.filter((e) => e.id !== id);
+          // Remove the print() function call from here
+        }
+      }
+
+      // Function to generate random gradient colors
+      function generateRandomGradient() {
+        const color1 = getRandomColor();
+        const color2 = getRandomColor();
+        return `linear-gradient(to right, ${color1}, ${color2})`;
+      }
+
+      // Function to generate random RGB color
+      function getRandomColor() {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+
+      // Update button's background gradient continuously
+      setInterval(() => {
+        const btn = document.getElementById("btn");
+        btn.style.backgroundImage = generateRandomGradient();
+      }, 3000); // Change gradient every 3 seconds
+
+      // Update header's background gradient continuously
+      setInterval(() => {
+        const header = document.querySelector(".header");
+        header.style.backgroundImage = generateRandomGradient();
+      }, 3000); // Change gradient every 3 seconds
+    </script>
+  </body>
+</html>
